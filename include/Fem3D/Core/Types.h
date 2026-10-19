@@ -42,7 +42,7 @@ inline constexpr int index(Dof d) { return static_cast<int>(d); }
 /// Tolérances géométriques et numériques (sans unité implicite : valeurs relatives, ou longueurs en unités du modèle).
 struct Tolerance
 {
-    /// Longueur minimale d'un élément, relative à la plus grande dimension du modèle.
+    /// Longueur minimale d'un élément, relative à max(|coordonnées de ses deux extrémités|, 1) (LocalCoordinateSystem3D).
     static constexpr double relativeMinimumLength = 1e-9;
     /// |cos| au-delà duquel le vecteur d'orientation est jugé parallèle à l'axe de l'élément.
     static constexpr double parallelCosine = 1.0 - 1e-9;

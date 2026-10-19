@@ -1,7 +1,9 @@
 # Qualification du moteur Fem3D
 
 La qualification décide **ce que Fem3D a le droit de calculer** dans TSA. Un niveau s'atteint fonction par fonction ;
-un moteur n'est promu que sur le périmètre où toutes ses fonctions ont le niveau requis.
+un moteur n'est promu que sur le périmètre où toutes ses fonctions ont le niveau requis. Définition détaillée des
+niveaux (critères, preuves, entrée et sortie) : [MATURITY_LEVELS.md](MATURITY_LEVELS.md) ; preuves liées au code :
+[GIT_TRACEABILITY.md](../traceability/GIT_TRACEABILITY.md).
 
 ## 1. Niveaux
 

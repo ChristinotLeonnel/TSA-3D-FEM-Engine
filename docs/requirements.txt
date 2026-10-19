@@ -1,0 +1,4 @@
+# Outils de construction du site documentaire (versions vérifiées le 2026-10-19).
+mkdocs==1.6.1
+mkdocs-material==9.5.39
+pymdown-extensions==10.21.3

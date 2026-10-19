@@ -7,7 +7,8 @@ et la comparaison a bien été exécutée. Les cas 12 à 17 portent sur les rotu
 - **2 657 valeurs comparées, 0 hors tolérance.**
 - Les deux cas de mécanisme sont détectés par les deux codes.
 - Un cas est non comparable (16, Timoshenko) ; voir le §5.
-- Les 39 tests unitaires, analytiques et d'intégration réussissent (`fem3d_tests`).
+- Les 41 tests unitaires, analytiques et d'intégration réussissent (`fem3d_tests` : 41 déclarés à la révision
+  `75700d2`, 41 / 41 réussis à l'exécution du 19/10/2026).
 
 Cette validation porte sur la **statique linéaire de poutres prismatiques élastiques**. Elle ne vaut pas pour
 d'autres domaines (non-linéarité, dynamique, gauchissement), qui ne sont pas implémentés.

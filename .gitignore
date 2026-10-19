@@ -8,3 +8,8 @@ CMakeUserPresets.json
 # Benchmarks OpenSees : scripts et journaux régénérés à chaque exécution (chemins locaux absolus)
 benchmarks/OpenSees/cases/
 benchmarks/OpenSees/results/*.log
+
+# Site documentaire : environnement de construction et site généré (docs/developer/DEVELOPER_GUIDE.md §8)
+.venv/
+site/
+__pycache__/
