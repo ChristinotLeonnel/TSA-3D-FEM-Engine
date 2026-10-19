@@ -2,7 +2,8 @@
 # Construction : pip install -r docs/requirements.txt ; mkdocs build --strict (docs/developer/DEVELOPER_GUIDE.md §8).
 site_name: Fem3D — moteur éléments finis 3D
 site_description: Moteur éléments finis 3D de poutres (Euler–Bernoulli, Timoshenko), validé contre OpenSees, documenté pour l'enseignement et la recherche.
-site_url: https://christinotleonnel.github.io/TSA-3D-FEM-Engine/
+# Adresse de publication : FEM3D_SITE_URL la remplace quand le site est publié ailleurs (site TSA Web : /fem3d/).
+site_url: !ENV [FEM3D_SITE_URL, "https://christinotleonnel.github.io/TSA-3D-FEM-Engine/"]
 repo_url: https://github.com/ChristinotLeonnel/TSA-3D-FEM-Engine
 repo_name: TSA-3D-FEM-Engine
 edit_uri: edit/main/docs/

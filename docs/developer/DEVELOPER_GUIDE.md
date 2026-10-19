@@ -103,6 +103,10 @@ puis régénérer.
   `mkdocs build --strict` (dossier `site/`, non versionné).
 - CI : **pas encore configurée** (vérifié le 2026-10-19) : le workflow `.github/workflows/docs.yml`, qui doit
   construire et vérifier le site à chaque push et pull request, est à créer ; la publication ci-dessous en dépend.
+- **Publication actuelle** (depuis le 2026-10-19) : le site est construit en mode strict et publié par le site TSA
+  Web (dépôt `Tsaraloha-Web`, workflow `deploy.yml`) à l'adresse
+  `https://christinotleonnel.github.io/Tsaraloha-Web/fem3d/`, depuis la branche `main` de ce dépôt, à chaque
+  déploiement de TSA Web. La variable `FEM3D_SITE_URL` y fixe l'adresse (`site_url` de `mkdocs.yml`).
 - **Publication** (GitHub Pages) : jamais automatique. Prérequis à vérifier par le propriétaire du dépôt :
   1. *Settings → Pages → Build and deployment → Source : GitHub Actions* ;
   2. vérifier qu'aucun secret ni fichier personnel n'est dans `docs/` (`git grep -i -E "token|password|secret"`) ;
