@@ -1,0 +1,10 @@
+# Constructions
+build/
+postprocessor/build/
+.vs/
+*.user
+CMakeUserPresets.json
+
+# Benchmarks OpenSees : scripts et journaux régénérés à chaque exécution (chemins locaux absolus)
+benchmarks/OpenSees/cases/
+benchmarks/OpenSees/results/*.log
