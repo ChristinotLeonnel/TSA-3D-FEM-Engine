@@ -1,0 +1,7 @@
+version 3.8.0
+status -3
+node 1 0 0 0 0 0 0
+node 2 0 0 0 0 0 0
+reaction 1 0 0 0 0 0 0
+reaction 2 0 0 0 0 0 0
+element 1 0 0 0 -0 0 0 0 0 0 0 0 0
