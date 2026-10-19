@@ -1,0 +1,151 @@
+# Site documentaire de Fem3D (MkDocs + Material). Source unique : le dossier docs/.
+# Construction : pip install -r docs/requirements.txt ; mkdocs build --strict (docs/developer/DEVELOPER_GUIDE.md §8).
+site_name: Fem3D — moteur éléments finis 3D
+site_description: Moteur éléments finis 3D de poutres (Euler–Bernoulli, Timoshenko), validé contre OpenSees, documenté pour l'enseignement et la recherche.
+site_url: https://christinotleonnel.github.io/TSA-3D-FEM-Engine/
+repo_url: https://github.com/ChristinotLeonnel/TSA-3D-FEM-Engine
+repo_name: TSA-3D-FEM-Engine
+edit_uri: edit/main/docs/
+copyright: Code et documentation sous licence MIT — © 2026 Tsaraloha Christinot
+
+docs_dir: docs
+exclude_docs: |
+  /README.md
+  references/_downloads/
+
+theme:
+  name: material
+  language: fr
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.indexes
+    - navigation.top
+    - navigation.footer
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - toc.follow
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/weather-night
+        name: Mode sombre
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/weather-sunny
+        name: Mode clair
+
+plugins:
+  - search:
+      lang: fr
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://unpkg.com/mathjax@3.2.2/es5/tex-mml-chtml.js
+
+validation:
+  nav:
+    omitted_files: warn
+    not_found: warn
+  links:
+    not_found: warn
+    anchors: warn
+    absolute_links: warn
+    unrecognized_links: warn
+
+nav:
+  - Accueil: index.md
+  - Démarrage rapide: getting-started.md
+  - Parcours étudiant:
+      - learning/index.md
+      - "Niveau 0 — Découverte": learning/level-00/index.md
+      - "Niveau 1 — Notions fondamentales": learning/level-01/index.md
+      - "Niveau 2 — Une poutre 3D": learning/level-02/index.md
+      - "Niveau 3 — Le solveur": learning/level-03/index.md
+      - "Niveau 4 — Les résultats": learning/level-04/index.md
+      - "Niveau 5 — Validation scientifique": learning/level-05/index.md
+      - "Niveau 6 — Développement et recherche": learning/level-06/index.md
+      - Guide étudiant, enseignant, chercheur: education/RESEARCH_AND_STUDENT_GUIDE.md
+  - Livre technique:
+      - book/Fem3D_Technical_Book.md
+      - "1. Présentation": book/chapters/01-presentation.md
+      - "2. Fondements de la MEF": book/chapters/02-fondements-mef.md
+      - "3. Modèle physique": book/chapters/03-modele-physique.md
+      - "4. Repères": book/chapters/04-reperes.md
+      - "5. Unités et signes": book/chapters/05-unites-signes.md
+      - "6. Euler–Bernoulli": book/chapters/06-euler-bernoulli.md
+      - "7. Timoshenko": book/chapters/07-timoshenko.md
+      - "8. Torsion et gauchissement": book/chapters/08-torsion-gauchissement.md
+      - "9. Matériaux et sections": book/chapters/09-materiaux-sections.md
+      - "10. Charges et conditions aux limites": book/chapters/10-charges-conditions-limites.md
+      - "11. Ressorts d'appui": book/chapters/11-ressorts.md
+      - "12. Assemblage": book/chapters/12-assemblage.md
+      - "13. Stabilité": book/chapters/13-conditions-limites-stabilite.md
+      - "14. Solveur et diagnostics": book/chapters/14-solveur-diagnostics.md
+      - "15. Efforts internes": book/chapters/15-efforts-internes.md
+      - "16. Déplacements et contraintes": book/chapters/16-deplacements-contraintes.md
+      - "17. Architecture C++": book/chapters/17-architecture-cpp.md
+      - "18. TSA et OpenSees": book/chapters/18-integration-tsa-opensees.md
+      - "19. Validation et reproductibilité": book/chapters/19-validation-reproductibilite.md
+      - "20. Tests et limites": book/chapters/20-tests-limites.md
+      - "21. Extensions": book/chapters/21-extensions.md
+      - "22. Exercices et projets": book/chapters/22-exercices-projets.md
+  - Théorie et formulations:
+      - Théorie: theory/THEORY.md
+      - Conventions de signes: theory/SIGN_CONVENTIONS.md
+      - Unités et repères: theory/UNITS_AND_COORDINATES.md
+      - Formulations: formulations/FORMULATIONS.md
+      - Algorithmes: reference/ALGORITHMS.md
+  - Architecture:
+      - Architecture C++: ARCHITECTURE.md
+      - Diagrammes: diagrams/index.md
+      - "A. Architecture générale": diagrams/architecture.md
+      - "B. Calcul": diagrams/calcul.md
+      - "C. Validation OpenSees": diagrams/validation-opensees.md
+      - "D. Éléments poutre": diagrams/elements-poutre.md
+      - "E. Stabilité": diagrams/stabilite.md
+      - "F. Moteur dans TSA": diagrams/selection-moteur-tsa.md
+      - "H. Dépendances du code": diagrams/dependances-code.md
+      - Intégration dans TSA: INTEGRATION_TSA.md
+      - Format des résultats: RESULTS_FORMAT.md
+  - Référence API: reference/API.md
+  - Validation:
+      - Guide de validation scientifique: validation/SCIENTIFIC_VALIDATION_GUIDE.md
+      - Plan de validation: validation/VALIDATION_PLAN.md
+      - Résultats OpenSees: validation/VALIDATION_OPENSEES.md
+      - Niveaux de maturité: validation/MATURITY_LEVELS.md
+      - Qualification: validation/QUALIFICATION.md
+      - Audit: AUDIT.md
+      - Audit indépendant des formulations: verification/INDEPENDENT_FORMULATION_AUDIT.md
+  - Limites: limitations/KNOWN_LIMITATIONS.md
+  - Contribuer:
+      - Guide développeur: developer/DEVELOPER_GUIDE.md
+      - Feuille de route: ROADMAP.md
+      - Stratégie de traduction: i18n/TRANSLATION_STRATEGY.md
+  - Références:
+      - Bibliographie: references/REFERENCES.md
+      - Webographie: references/WEBOGRAPHY.md
+      - Manifeste des sources: references/SOURCES_MANIFEST.md
+      - Glossaire: reference/GLOSSARY.md
+  - Licence: LICENSING.md
+  - Versions: CHANGELOG.md
+  - Traçabilité Git: traceability/GIT_TRACEABILITY.md

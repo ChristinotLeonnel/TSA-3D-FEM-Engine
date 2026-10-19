@@ -1,7 +1,7 @@
 # Architecture
 
 Le moteur est une bibliothèque C++20 autonome (`fem3d`), qui ne dépend que d'Eigen 3.4 et d'aucun composant Qt
-ni graphique. Le post-traitement est un sous-projet séparé du même dépôt ([`../postprocessor`](../postprocessor), Qt), qui ne communique avec le
+ni graphique. Le post-traitement est un sous-projet séparé du même dépôt ([`postprocessor/`](https://github.com/ChristinotLeonnel/TSA-3D-FEM-Engine/blob/75700d2bfd33c29b2fadc795fd3051f25399ad19/postprocessor/README.md), Qt), qui ne communique avec le
 moteur que par le fichier de résultats versionné ([RESULTS_FORMAT.md](RESULTS_FORMAT.md)).
 
 ```text

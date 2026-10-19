@@ -1,0 +1,124 @@
+// Généré par tools/docs/gen_dependency_graph.py : ne pas modifier à la main.
+digraph fem3d {
+  rankdir=BT;
+  node [shape=box, fontsize=10];
+  subgraph "cluster_Analysis" { label="Analysis";
+    "include/Fem3D/Analysis/LinearStaticAnalysis.h";
+    "src/Analysis/LinearStaticAnalysis.cpp";
+  }
+  subgraph "cluster_Assembly" { label="Assembly";
+    "include/Fem3D/Assembly/DofMap.h";
+    "include/Fem3D/Assembly/GlobalAssembler.h";
+    "src/Assembly/Assembly.cpp";
+  }
+  subgraph "cluster_Constraints" { label="Constraints";
+    "include/Fem3D/Constraints/BoundaryConditions.h";
+  }
+  subgraph "cluster_Core" { label="Core";
+    "include/Fem3D/Core/Fem3DError.h";
+    "include/Fem3D/Core/Polynomial.h";
+    "include/Fem3D/Core/Types.h";
+  }
+  subgraph "cluster_Elements" { label="Elements";
+    "include/Fem3D/Elements/BeamElementBase.h";
+    "include/Fem3D/Elements/EndReleases.h";
+    "include/Fem3D/Elements/EulerBernoulli3D.h";
+    "include/Fem3D/Elements/IBeamElement3D.h";
+    "include/Fem3D/Elements/StaticCondensation.h";
+    "include/Fem3D/Elements/Timoshenko3D.h";
+    "src/Elements/BeamElements.cpp";
+    "src/Elements/StaticCondensation.cpp";
+  }
+  subgraph "cluster_Geometry" { label="Geometry";
+    "include/Fem3D/Geometry/LocalCoordinateSystem3D.h";
+    "include/Fem3D/Geometry/Node3D.h";
+    "src/Geometry/LocalCoordinateSystem3D.cpp";
+  }
+  subgraph "cluster_Loads" { label="Loads";
+    "include/Fem3D/Loads/Loads3D.h";
+  }
+  subgraph "cluster_Materials" { label="Materials";
+    "include/Fem3D/Materials/ElasticMaterial.h";
+    "src/Materials/ElasticMaterial.cpp";
+  }
+  subgraph "cluster_Model" { label="Model";
+    "include/Fem3D/Model/StructuralModel3D.h";
+    "src/Model/StructuralModel3D.cpp";
+  }
+  subgraph "cluster_Results" { label="Results";
+    "include/Fem3D/Results/AnalysisResults.h";
+    "include/Fem3D/Results/BeamResponse.h";
+    "include/Fem3D/Results/ResultsJsonWriter.h";
+    "src/Results/BeamResponse.cpp";
+    "src/Results/ResultsJsonWriter.cpp";
+  }
+  subgraph "cluster_Sections" { label="Sections";
+    "include/Fem3D/Sections/BeamSection3D.h";
+    "src/Sections/BeamSection3D.cpp";
+  }
+  subgraph "cluster_Solver" { label="Solver";
+    "include/Fem3D/Solver/LinearSystemSolver.h";
+    "src/Solver/LinearSystemSolver.cpp";
+  }
+  "include/Fem3D/Analysis/LinearStaticAnalysis.h" -> "include/Fem3D/Assembly/GlobalAssembler.h";
+  "include/Fem3D/Analysis/LinearStaticAnalysis.h" -> "include/Fem3D/Results/AnalysisResults.h";
+  "include/Fem3D/Analysis/LinearStaticAnalysis.h" -> "include/Fem3D/Solver/LinearSystemSolver.h";
+  "include/Fem3D/Assembly/DofMap.h" -> "include/Fem3D/Core/Types.h";
+  "include/Fem3D/Assembly/DofMap.h" -> "include/Fem3D/Model/StructuralModel3D.h";
+  "include/Fem3D/Assembly/GlobalAssembler.h" -> "include/Fem3D/Assembly/DofMap.h";
+  "include/Fem3D/Constraints/BoundaryConditions.h" -> "include/Fem3D/Core/Types.h";
+  "include/Fem3D/Elements/BeamElementBase.h" -> "include/Fem3D/Elements/IBeamElement3D.h";
+  "include/Fem3D/Elements/EndReleases.h" -> "include/Fem3D/Core/Types.h";
+  "include/Fem3D/Elements/EulerBernoulli3D.h" -> "include/Fem3D/Elements/BeamElementBase.h";
+  "include/Fem3D/Elements/IBeamElement3D.h" -> "include/Fem3D/Core/Types.h";
+  "include/Fem3D/Elements/IBeamElement3D.h" -> "include/Fem3D/Elements/EndReleases.h";
+  "include/Fem3D/Elements/IBeamElement3D.h" -> "include/Fem3D/Geometry/LocalCoordinateSystem3D.h";
+  "include/Fem3D/Elements/IBeamElement3D.h" -> "include/Fem3D/Materials/ElasticMaterial.h";
+  "include/Fem3D/Elements/IBeamElement3D.h" -> "include/Fem3D/Sections/BeamSection3D.h";
+  "include/Fem3D/Elements/StaticCondensation.h" -> "include/Fem3D/Core/Types.h";
+  "include/Fem3D/Elements/Timoshenko3D.h" -> "include/Fem3D/Elements/BeamElementBase.h";
+  "include/Fem3D/Geometry/LocalCoordinateSystem3D.h" -> "include/Fem3D/Core/Types.h";
+  "include/Fem3D/Geometry/Node3D.h" -> "include/Fem3D/Core/Types.h";
+  "include/Fem3D/Loads/Loads3D.h" -> "include/Fem3D/Core/Types.h";
+  "include/Fem3D/Model/StructuralModel3D.h" -> "include/Fem3D/Constraints/BoundaryConditions.h";
+  "include/Fem3D/Model/StructuralModel3D.h" -> "include/Fem3D/Elements/IBeamElement3D.h";
+  "include/Fem3D/Model/StructuralModel3D.h" -> "include/Fem3D/Geometry/Node3D.h";
+  "include/Fem3D/Model/StructuralModel3D.h" -> "include/Fem3D/Loads/Loads3D.h";
+  "include/Fem3D/Model/StructuralModel3D.h" -> "include/Fem3D/Materials/ElasticMaterial.h";
+  "include/Fem3D/Model/StructuralModel3D.h" -> "include/Fem3D/Sections/BeamSection3D.h";
+  "include/Fem3D/Results/AnalysisResults.h" -> "include/Fem3D/Core/Types.h";
+  "include/Fem3D/Results/AnalysisResults.h" -> "include/Fem3D/Elements/IBeamElement3D.h";
+  "include/Fem3D/Results/BeamResponse.h" -> "include/Fem3D/Core/Polynomial.h";
+  "include/Fem3D/Results/BeamResponse.h" -> "include/Fem3D/Elements/IBeamElement3D.h";
+  "include/Fem3D/Results/BeamResponse.h" -> "include/Fem3D/Loads/Loads3D.h";
+  "include/Fem3D/Results/BeamResponse.h" -> "include/Fem3D/Results/AnalysisResults.h";
+  "include/Fem3D/Results/ResultsJsonWriter.h" -> "include/Fem3D/Model/StructuralModel3D.h";
+  "include/Fem3D/Results/ResultsJsonWriter.h" -> "include/Fem3D/Results/AnalysisResults.h";
+  "include/Fem3D/Solver/LinearSystemSolver.h" -> "include/Fem3D/Assembly/GlobalAssembler.h";
+  "src/Analysis/LinearStaticAnalysis.cpp" -> "include/Fem3D/Analysis/LinearStaticAnalysis.h";
+  "src/Analysis/LinearStaticAnalysis.cpp" -> "include/Fem3D/Core/Fem3DError.h";
+  "src/Analysis/LinearStaticAnalysis.cpp" -> "include/Fem3D/Results/BeamResponse.h";
+  "src/Assembly/Assembly.cpp" -> "include/Fem3D/Assembly/GlobalAssembler.h";
+  "src/Assembly/Assembly.cpp" -> "include/Fem3D/Elements/StaticCondensation.h";
+  "src/Assembly/Assembly.cpp" -> "include/Fem3D/Results/BeamResponse.h";
+  "src/Elements/BeamElements.cpp" -> "include/Fem3D/Elements/EulerBernoulli3D.h";
+  "src/Elements/BeamElements.cpp" -> "include/Fem3D/Elements/StaticCondensation.h";
+  "src/Elements/BeamElements.cpp" -> "include/Fem3D/Elements/Timoshenko3D.h";
+  "src/Elements/StaticCondensation.cpp" -> "include/Fem3D/Elements/StaticCondensation.h";
+  "src/Geometry/LocalCoordinateSystem3D.cpp" -> "include/Fem3D/Core/Fem3DError.h";
+  "src/Geometry/LocalCoordinateSystem3D.cpp" -> "include/Fem3D/Geometry/LocalCoordinateSystem3D.h";
+  "src/Materials/ElasticMaterial.cpp" -> "include/Fem3D/Core/Fem3DError.h";
+  "src/Materials/ElasticMaterial.cpp" -> "include/Fem3D/Materials/ElasticMaterial.h";
+  "src/Model/StructuralModel3D.cpp" -> "include/Fem3D/Core/Fem3DError.h";
+  "src/Model/StructuralModel3D.cpp" -> "include/Fem3D/Elements/EulerBernoulli3D.h";
+  "src/Model/StructuralModel3D.cpp" -> "include/Fem3D/Elements/Timoshenko3D.h";
+  "src/Model/StructuralModel3D.cpp" -> "include/Fem3D/Model/StructuralModel3D.h";
+  "src/Results/BeamResponse.cpp" -> "include/Fem3D/Elements/StaticCondensation.h";
+  "src/Results/BeamResponse.cpp" -> "include/Fem3D/Results/BeamResponse.h";
+  "src/Results/ResultsJsonWriter.cpp" -> "include/Fem3D/Core/Fem3DError.h";
+  "src/Results/ResultsJsonWriter.cpp" -> "include/Fem3D/Results/ResultsJsonWriter.h";
+  "src/Sections/BeamSection3D.cpp" -> "include/Fem3D/Core/Fem3DError.h";
+  "src/Sections/BeamSection3D.cpp" -> "include/Fem3D/Sections/BeamSection3D.h";
+  "src/Solver/LinearSystemSolver.cpp" -> "include/Fem3D/Core/Fem3DError.h";
+  "src/Solver/LinearSystemSolver.cpp" -> "include/Fem3D/Solver/LinearSystemSolver.h";
+}

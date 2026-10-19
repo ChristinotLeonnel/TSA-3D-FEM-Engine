@@ -59,3 +59,14 @@ validation ([../validation/VALIDATION_PLAN.md](../validation/VALIDATION_PLAN.md)
   et ne vaut pas vérification réglementaire. Aucune vérification normative (Eurocodes) n'est faite.
 - Aucune combinaison ni enveloppe de cas n'est construite par le moteur (TSA les construit et les lui transmet).
 - Une seule version de référence pour la validation croisée : OpenSees 3.8.0.
+
+## 6. Points ouverts (état vérifié le 2026-10-19)
+
+| Point | État | Suite |
+|---|---|---|
+| Charges ponctuelles, partielles, moments répartis | non implémentés ; refusés par le moteur `fem3d` de TSA (ou confiés à OpenSees si l'utilisateur l'a choisi) | [ROADMAP.md](../ROADMAP.md) étape 2 |
+| Qualification de niveau 5 dans TSA | non atteinte ([MATURITY_LEVELS.md](../validation/MATURITY_LEVELS.md)) | comparaison systématique, relecture humaine |
+| Exécutable de tests de TSA lancé directement en mode `offscreen` | arrêt brutal (0xC0000409) dans la suite d'affichage du maillage (après le test 342), observé une fois ; CTest (35/35) ne le reproduit pas ; non vérifié sur la version antérieure | à diagnostiquer dans le dépôt TSA |
+| Traductions EN et MG des textes d'interface du moteur dans TSA | absentes des fichiers `.ts` | [TRANSLATION_STRATEGY.md](../i18n/TRANSLATION_STRATEGY.md) §4 |
+| Compilation de TSALab avec Fem3D | non vérifiée (TSALab partage la configuration CMake de TSA et trouvera Fem3D) | compiler TSALab |
+| Licence des résultats d'OpenSees versionnés | statut non établi formellement | [LICENSING.md](../LICENSING.md) §3 |
