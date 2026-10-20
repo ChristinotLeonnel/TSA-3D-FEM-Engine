@@ -104,15 +104,15 @@ puis régénérer.
 - CI : workflow *Documentation* (`.github/workflows/docs.yml`, depuis le 2026-10-20), à chaque push et pull
   request : `gitlinks.py check` (avec un clone de TSA pour ses liens), `--check` des trois générateurs, rendu des
   diagrammes Mermaid (mermaid-cli 12.0.0) et `mkdocs build --strict`. La publication ci-dessous en dépend.
-- **Publication actuelle** (depuis le 2026-10-19) : le site est construit en mode strict et publié par le site TSA
-  Web (dépôt `Tsaraloha-Web`, workflow `deploy.yml`) à l'adresse
-  `https://christinotleonnel.github.io/Tsaraloha-Web/fem3d/`, depuis la branche `main` de ce dépôt, à chaque
-  déploiement de TSA Web. La variable `FEM3D_SITE_URL` y fixe l'adresse (`site_url` de `mkdocs.yml`).
-- **Publication** (GitHub Pages) : jamais automatique. Prérequis à vérifier par le propriétaire du dépôt :
-  1. *Settings → Pages → Build and deployment → Source : GitHub Actions* ;
-  2. vérifier qu'aucun secret ni fichier personnel n'est dans `docs/` (`git grep -i -E "token|password|secret"`) ;
-  3. lancer le workflow *Documentation* manuellement (*Actions → Documentation → Run workflow*, option `publish`).
-  L'adresse du site sera `https://christinotleonnel.github.io/TSA-3D-FEM-Engine/`.
+- **Publication** (GitHub Pages, depuis le 2026-10-20) : le site officiel est hébergé à
+  `https://christinotleonnel.github.io/TSA-3D-FEM-Engine/`. La publication n'est jamais automatique (AGENTS.md
+  règle 18) ; elle est déclenchée manuellement :
+  1. vérifier qu'aucun secret ni fichier personnel n'est dans `docs/` (`git grep -i -E "token|password|secret"`) ;
+  2. lancer le workflow *Documentation* manuellement (*Actions → Documentation → Run workflow*, branche `main`,
+     case `publish`).
+- **Lien avec TSA Web** : la navigation du site comporte un onglet « TSA Web » pointant vers le site officiel de TSA
+  (`https://christinotleonnel.github.io/Tsaraloha-Web/`). Réciproquement, la page *Moteurs de calcul* de TSA Web
+  pointe vers ce site, et l'ancienne copie `/fem3d/` hébergée sur TSA Web y est automatiquement redirigée.
 
 ## 9. Git
 

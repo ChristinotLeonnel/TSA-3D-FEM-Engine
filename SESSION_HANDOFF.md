@@ -56,26 +56,25 @@ réponse de l'exercice 9, commandes OpenSees non inventoriées marquées). Toute
 relancées après ces corrections : mêmes résultats (strict 0 avertissement, Mermaid 23/23, 731 liens, 0 lien relatif
 invalide, exercice 1 OK).
 
-## Commits, fusion, publication (2026-10-19, à la demande de l'utilisateur)
+## Commits, fusion, publication (2026-10-19 et 2026-10-20, à la demande de l'utilisateur)
 
-- Fem3D : `f6af180` (documentation, 74 fichiers) et `3b0b926` (`site_url` lisant `FEM3D_SITE_URL`), fusionnés
-  dans `main` (`328d4bb`, `ec73cc6`) et poussés (`main`, `docs-livre-site`). Cette note reste non versionnée.
-- TSA Web : `63d04b1`, fusion `cd9cd7a` sur `main`, poussés (branche `fem3d-docs` aussi). `deploy.yml` construit la
-  documentation Fem3D (dépôt public, branche `main`, `mkdocs build --strict`) dans `dist/fem3d` ; la page
-  « Moteurs de calcul » présente Fem3D (version de développement de TSA, aucune version publiée) avec le lien.
-- Déploiement GitHub Actions 39225918817 : succès (toutes les étapes Fem3D comprises).
-- En ligne : https://christinotleonnel.github.io/Tsaraloha-Web/fem3d/ (pages vérifiées en HTTP 200, URL
-  canonique correcte). Mise à jour automatique à chaque déploiement de TSA Web (push sur `main`, toutes les 6 h).
+- Fem3D :
+  - `f6af180`, `3b0b926` (documentation initiale et URL paramétrable).
+  - `0ad974d`, `aa6902d`, `449b538` (CI documentaire `.github/workflows/docs.yml` avec vérifications automatiques et déploiement Pages manuel).
+  - Déploiement GitHub Pages sur `TSA-3D-FEM-Engine` : run 39395850929 réussi le 2026-10-20.
+  - En ligne direct : https://christinotleonnel.github.io/TSA-3D-FEM-Engine/ (toutes pages vérifiées HTTP 200).
+  - Onglet « TSA Web » ajouté à la navigation vers https://christinotleonnel.github.io/Tsaraloha-Web/.
+- TSA Web :
+  - Ancien build local `/fem3d/` retiré de `deploy.yml`.
+  - Redirection immédiate de l'ancienne URL `/fem3d/` et de ses sous-pages vers `https://christinotleonnel.github.io/TSA-3D-FEM-Engine/` (`public/fem3d/index.html` et `public/404.html`).
+  - Page `src/content/docs/fr/analysis/engines.md` mise à jour avec le lien vers le site officiel Fem3D.
+  - Build et tests réussis (74 routes prérendues, `test:docs` 45/45).
 
 ## Reste à faire
 
 1. Relecture humaine des chapitres 10, 11, 17 à 22 (condition du niveau 5 pour la théorie).
-2. CI propre au dépôt Fem3D : **faite le 2026-10-20** (`.github/workflows/docs.yml`, commit `0ad974d`, run
-   39395140645 réussi : liens, générateurs, Mermaid, build strict). Pour publier aussi sur
-   `https://christinotleonnel.github.io/TSA-3D-FEM-Engine/` : activer *Settings → Pages → Source : GitHub Actions*,
-   puis *Actions → Documentation → Run workflow* sur `main`, case `publish` (DEVELOPER_GUIDE §8).
-3. Inventorier dans `WEBOGRAPHY.md` les commandes OpenSees `truss` et `eigen` si les projets B ou E démarrent.
-4. `gh` n'est pas authentifié sur ce poste (`gh auth login`) ; le suivi des déploiements s'est fait par l'API
+2. Inventorier dans `WEBOGRAPHY.md` les commandes OpenSees `truss` et `eigen` si les projets B ou E démarrent.
+3. `gh` n'est pas authentifié sur ce poste (`gh auth login`) ; le suivi des déploiements s'est fait par l'API
    publique de GitHub.
 
 ## Commandes utiles
