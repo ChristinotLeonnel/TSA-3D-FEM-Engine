@@ -101,8 +101,9 @@ puis régénérer.
 
 - Construction locale : `pip install -r docs/requirements.txt`, puis `mkdocs serve` (aperçu) ou
   `mkdocs build --strict` (dossier `site/`, non versionné).
-- CI : **pas encore configurée** (vérifié le 2026-10-19) : le workflow `.github/workflows/docs.yml`, qui doit
-  construire et vérifier le site à chaque push et pull request, est à créer ; la publication ci-dessous en dépend.
+- CI : workflow *Documentation* (`.github/workflows/docs.yml`, depuis le 2026-10-20), à chaque push et pull
+  request : `gitlinks.py check` (avec un clone de TSA pour ses liens), `--check` des trois générateurs, rendu des
+  diagrammes Mermaid (mermaid-cli 12.0.0) et `mkdocs build --strict`. La publication ci-dessous en dépend.
 - **Publication actuelle** (depuis le 2026-10-19) : le site est construit en mode strict et publié par le site TSA
   Web (dépôt `Tsaraloha-Web`, workflow `deploy.yml`) à l'adresse
   `https://christinotleonnel.github.io/Tsaraloha-Web/fem3d/`, depuis la branche `main` de ce dépôt, à chaque
