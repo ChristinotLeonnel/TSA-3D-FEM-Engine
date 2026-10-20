@@ -105,11 +105,9 @@ puis régénérer.
   request : `gitlinks.py check` (avec un clone de TSA pour ses liens), `--check` des trois générateurs, rendu des
   diagrammes Mermaid (mermaid-cli 12.0.0) et `mkdocs build --strict`. La publication ci-dessous en dépend.
 - **Publication** (GitHub Pages, depuis le 2026-10-20) : le site officiel est hébergé à
-  `https://christinotleonnel.github.io/TSA-3D-FEM-Engine/`. La publication n'est jamais automatique (AGENTS.md
-  règle 18) ; elle est déclenchée manuellement :
-  1. vérifier qu'aucun secret ni fichier personnel n'est dans `docs/` (`git grep -i -E "token|password|secret"`) ;
-  2. lancer le workflow *Documentation* manuellement (*Actions → Documentation → Run workflow*, branche `main`,
-     case `publish`).
+  `https://christinotleonnel.github.io/TSA-3D-FEM-Engine/`. La publication est **automatique à chaque push sur la branche `main`**
+  dès que toutes les étapes de vérification stricte réussissent. Elle peut aussi être déclenchée manuellement
+  (*Actions → Documentation → Run workflow*, branche `main`, option `publish`).
 - **Lien avec TSA Web** : la navigation du site comporte un onglet « TSA Web » pointant vers le site officiel de TSA
   (`https://christinotleonnel.github.io/Tsaraloha-Web/`). Réciproquement, la page *Moteurs de calcul* de TSA Web
   pointe vers ce site, et l'ancienne copie `/fem3d/` hébergée sur TSA Web y est automatiquement redirigée.
