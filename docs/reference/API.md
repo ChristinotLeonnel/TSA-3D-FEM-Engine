@@ -96,7 +96,7 @@ Polynôme p(x) = c0 + c1 x + c2 x² + … (abscisse locale x de l'élément, 0 �
 
 ### `Types.h`
 
-[include/Fem3D/Core/Types.h](https://github.com/ChristinotLeonnel/TSA-3D-FEM-Engine/blob/75700d2bfd33c29b2fadc795fd3051f25399ad19/include/Fem3D/Core/Types.h)
+`include/Fem3D/Core/Types.h` (modifié depuis la révision de référence 75700d2)
 
 Types et constantes communs du moteur EF 3D (docs/theory/SIGN_CONVENTIONS.md). Ordre des degrés de liberté d'un nœud (repère global) ou d'une extrémité d'élément (repère local) : 0 u (translation x)   1 v (translation y)   2 w (translation z) 3 θx (rotation x)     4 θy (rotation y)      5 θz (rotation z) Vecteur élémentaire (12 DDL) : [u_i v_i w_i θx_i θy_i θz_i  u_j v_j w_j θx_j θy_j θz_j]ᵀ.
 

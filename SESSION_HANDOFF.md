@@ -70,8 +70,10 @@ invalide, exercice 1 OK).
 ## Reste à faire
 
 1. Relecture humaine des chapitres 10, 11, 17 à 22 (condition du niveau 5 pour la théorie).
-2. CI propre au dépôt Fem3D (`.github/workflows/docs.yml`, construction stricte à chaque push), si souhaité ; la
-   publication passe aujourd'hui par TSA Web.
+2. CI propre au dépôt Fem3D : **faite le 2026-10-20** (`.github/workflows/docs.yml`, commit `0ad974d`, run
+   39395140645 réussi : liens, générateurs, Mermaid, build strict). Pour publier aussi sur
+   `https://christinotleonnel.github.io/TSA-3D-FEM-Engine/` : activer *Settings → Pages → Source : GitHub Actions*,
+   puis *Actions → Documentation → Run workflow* sur `main`, case `publish` (DEVELOPER_GUIDE §8).
 3. Inventorier dans `WEBOGRAPHY.md` les commandes OpenSees `truss` et `eigen` si les projets B ou E démarrent.
 4. `gh` n'est pas authentifié sur ce poste (`gh auth login`) ; le suivi des déploiements s'est fait par l'API
    publique de GitHub.

@@ -1,0 +1,110 @@
+# Site documentaire de Fem3D : vérification à chaque push et pull request, publication GitHub Pages sur demande.
+# Règles : AGENTS.md §4-5 (règles 15 et 18) ; procédure : docs/developer/DEVELOPER_GUIDE.md §8.
+# La publication n'est jamais automatique : Actions → Documentation → Run workflow (branche main, case « publish »).
+name: Documentation
+
+on:
+  push:
+    branches: [ "**" ]
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: "Publier le site sur GitHub Pages (branche main uniquement, prérequis du guide développeur §8)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Construction et vérifications
+    runs-on: ubuntu-latest
+    steps:
+      # Historique complet : gitlinks.py et les générateurs comparent avec les révisions de référence.
+      - name: Checkout Fem3D
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          path: TSA-3D-FEM-Engine
+
+      # Les liens vers TSA sont vérifiés dans son clone, attendu à côté de ce dépôt (../TSA, gitlinks.py).
+      - name: Checkout TSA (vérification des liens)
+        uses: actions/checkout@v4
+        with:
+          repository: ChristinotLeonnel/Tsaraloha-Structural-Analysis
+          fetch-depth: 0
+          path: TSA
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+          cache-dependency-path: TSA-3D-FEM-Engine/docs/requirements.txt
+
+      - name: Install documentation tools
+        run: pip install -r TSA-3D-FEM-Engine/docs/requirements.txt
+
+      - name: Check GitHub permalinks
+        working-directory: TSA-3D-FEM-Engine
+        run: python tools/docs/gitlinks.py check
+
+      - name: Check generated pages are up to date
+        working-directory: TSA-3D-FEM-Engine
+        run: |
+          python tools/docs/gen_traceability.py --check
+          python tools/docs/gen_api_reference.py --check
+          python tools/docs/gen_dependency_graph.py --check
+
+      # Rendu de chaque diagramme Mermaid (mkdocs ne les vérifie pas). Sandbox Chrome désactivé : les runners
+      # Ubuntu récents interdisent les espaces de noms utilisateur non privilégiés.
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Check Mermaid diagrams
+        working-directory: TSA-3D-FEM-Engine
+        run: |
+          MERMAID_DIR="$RUNNER_TEMP/mermaid-cli"
+          npm install --no-save --no-audit --no-fund --prefix "$MERMAID_DIR" @mermaid-js/mermaid-cli@12.0.0
+          echo '{ "args": ["--no-sandbox"] }' > "$MERMAID_DIR/puppeteer.json"
+          printf '#!/bin/sh\nexec "%s/node_modules/.bin/mmdc" -p "%s/puppeteer.json" "$@"\n' "$MERMAID_DIR" "$MERMAID_DIR" > "$MERMAID_DIR/mmdc"
+          chmod +x "$MERMAID_DIR/mmdc"
+          MMDC="$MERMAID_DIR/mmdc" python tools/docs/check_mermaid.py
+
+      # Adresse canonique : site_url par défaut de mkdocs.yml (https://christinotleonnel.github.io/TSA-3D-FEM-Engine/).
+      - name: Build site (strict)
+        working-directory: TSA-3D-FEM-Engine
+        run: mkdocs build --strict
+
+      - name: Setup Pages
+        if: github.event_name == 'workflow_dispatch' && inputs.publish && github.ref == 'refs/heads/main'
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        if: github.event_name == 'workflow_dispatch' && inputs.publish && github.ref == 'refs/heads/main'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: TSA-3D-FEM-Engine/site
+
+  deploy:
+    name: Publication GitHub Pages
+    if: github.event_name == 'workflow_dispatch' && inputs.publish && github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
