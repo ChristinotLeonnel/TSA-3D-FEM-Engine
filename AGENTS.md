@@ -51,8 +51,8 @@ l'unique fichier de règles : `CLAUDE.md` l'importe, `CONTRIBUTING.md` en donne 
     branche sans accord explicite.
 17. Ne jamais publier de secret, de jeton, de donnée personnelle, de fichier téléchargé soumis à des droits
     (`docs/references/_downloads/` n'est jamais versionné) ni de chemin local absolu (scripts Tcl générés).
-18. La publication du site (GitHub Pages) n'est déclenchée que manuellement, après vérification des droits
-    (`docs/developer/DEVELOPER_GUIDE.md` §8).
+18. La publication du site (GitHub Pages) est automatique à chaque push sur la branche `main` après succès de
+    toutes les vérifications strictes de la CI (`docs/developer/DEVELOPER_GUIDE.md` §8).
 
 ## 6. Travail multi-agents
 

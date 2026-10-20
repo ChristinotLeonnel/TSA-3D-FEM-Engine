@@ -1,6 +1,5 @@
-# Site documentaire de Fem3D : vérification à chaque push et pull request, publication GitHub Pages sur demande.
-# Règles : AGENTS.md §4-5 (règles 15 et 18) ; procédure : docs/developer/DEVELOPER_GUIDE.md §8.
-# La publication n'est jamais automatique : Actions → Documentation → Run workflow (branche main, case « publish »).
+# Site documentaire de Fem3D : vérifications à chaque push/PR, publication automatique sur GitHub Pages à chaque push sur main.
+# Procédure : docs/developer/DEVELOPER_GUIDE.md §8.
 name: Documentation
 
 on:
@@ -10,9 +9,9 @@ on:
   workflow_dispatch:
     inputs:
       publish:
-        description: "Publier le site sur GitHub Pages (branche main uniquement, prérequis du guide développeur §8)"
+        description: "Forcer la publication sur GitHub Pages même hors push (branche main uniquement)"
         type: boolean
-        default: false
+        default: true
 
 permissions:
   contents: read
@@ -81,18 +80,18 @@ jobs:
         run: mkdocs build --strict
 
       - name: Setup Pages
-        if: github.event_name == 'workflow_dispatch' && inputs.publish && github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.publish))
         uses: actions/configure-pages@v5
 
       - name: Upload Pages artifact
-        if: github.event_name == 'workflow_dispatch' && inputs.publish && github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.publish))
         uses: actions/upload-pages-artifact@v3
         with:
           path: TSA-3D-FEM-Engine/site
 
   deploy:
     name: Publication GitHub Pages
-    if: github.event_name == 'workflow_dispatch' && inputs.publish && github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.publish))
     needs: build
     runs-on: ubuntu-latest
     permissions:

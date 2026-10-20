@@ -64,6 +64,7 @@ invalide, exercice 1 OK).
   - Déploiement GitHub Pages sur `TSA-3D-FEM-Engine` : run 39395850929 réussi le 2026-10-20.
   - En ligne direct : https://christinotleonnel.github.io/TSA-3D-FEM-Engine/ (toutes pages vérifiées HTTP 200).
   - Onglet « TSA Web » ajouté à la navigation vers https://christinotleonnel.github.io/Tsaraloha-Web/.
+  - Configuration du déploiement automatique sur GitHub Pages à chaque push sur `main` (accord utilisateur, mise à jour règle 18 d'AGENTS.md).
 - TSA Web :
   - Ancien build local `/fem3d/` retiré de `deploy.yml`.
   - Redirection immédiate de l'ancienne URL `/fem3d/` et de ses sous-pages vers `https://christinotleonnel.github.io/TSA-3D-FEM-Engine/` (`public/fem3d/index.html` et `public/404.html`).
