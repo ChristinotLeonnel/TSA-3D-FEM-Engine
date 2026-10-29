@@ -28,9 +28,9 @@ calcul 3D secondaire du logiciel TSA.
 | Formulations | poutres d'Euler–Bernoulli et de Timoshenko exactes (12 DDL), rotules My/Mz, appuis rigides et élastiques |
 | Charges | nodales ; réparties linéaires sur toute la longueur, en repère local ou global |
 | Analyse | statique linéaire ; diagnostic des mécanismes, avertissement des quasi-mécanismes |
-| Validation | 41 tests ; 20 cas × 2 formulations contre OpenSees 3.8.0, 2 657 valeurs, 0 hors tolérance |
+| Validation | 49 tests ; 22 cas × 2 formulations contre OpenSees 3.8.0, 2 993 valeurs, 0 hors tolérance |
 | Maturité | niveau 4 sur le périmètre qualifié ; niveau 5 (qualification dans TSA) **non atteint** — [détails](validation/MATURITY_LEVELS.md) |
-| Non traité | non-linéarité, dynamique, gauchissement, treillis, charges ponctuelles ou partielles — [limites](limitations/KNOWN_LIMITATIONS.md) |
+| Non traité | non-linéarité, dynamique, gauchissement, treillis, couples concentrés sur barre — [limites](limitations/KNOWN_LIMITATIONS.md) |
 
 ```mermaid
 flowchart LR

@@ -19,7 +19,7 @@ Sans `FEM3D_EIGEN_DIR`, Eigen est cherché dans `../TSA/thirdparty/eigen-3.4.1/i
 build\fem3d_tests.exe
 ```
 
-Résultat attendu : `RESULTATS : 41 / 41 tests reussis`.
+Résultat attendu : `RESULTATS : 49 / 49 tests reussis`.
 
 ## 3. Premier calcul
 

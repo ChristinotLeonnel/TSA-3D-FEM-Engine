@@ -84,7 +84,7 @@ StructuralModel3D cantileverCase(BeamFormulation f, double length, const std::st
     return m;
 }
 
-StructuralModel3D spatialFrame(BeamFormulation f, bool distributed)
+StructuralModel3D spatialFrame(BeamFormulation f, bool distributed, const std::function<void(LoadCase3D&)>& memberLoads = {})
 {
     StructuralModel3D m = base(f);
     const Vector3 foot[4] = { { 0, 0, 0 }, { 6, 0, 0 }, { 6.5, 4, 0 }, { -0.5, 4.5, 0 } };
@@ -107,6 +107,7 @@ StructuralModel3D spatialFrame(BeamFormulation f, bool distributed)
         c.distributedLoads.push_back({ 13, LoadFrame::Global, Vector3(3.0, -1.0, -6.0), Vector3(3.0, -1.0, -6.0) });
         c.distributedLoads.push_back({ 2, LoadFrame::Global, Vector3(4.0, 0, 0), Vector3(4.0, 0, 0) });   // vent sur un poteau
     }
+    if (memberLoads) memberLoads(c);
     m.addLoadCase(c);
     return m;
 }
@@ -271,6 +272,23 @@ std::vector<Case> cases()
         m.setSpring({ 4, { 2.0e5, 1.5e5, 8.0e5, 5.0e4, 5.0e4, 3.0e4 } });
         return m;
     } });
+    list.push_back({ "21_portique_charges_ponctuelles", "Portique spatial : forces ponctuelles sur barres (repères local et global, effort axial compris)", [](BeamFormulation f) {
+        return spatialFrame(f, false, [](LoadCase3D& c) {
+            c.pointLoads.push_back({ 11, LoadFrame::Local, 2.0, Vector3(4.0, 3.0, -25.0) });
+            c.pointLoads.push_back({ 11, LoadFrame::Local, 4.5, Vector3(0.0, -2.0, -10.0) });
+            c.pointLoads.push_back({ 12, LoadFrame::Global, 1.5, Vector3(0.0, 0.0, -30.0) });
+            c.pointLoads.push_back({ 13, LoadFrame::Global, 3.0, Vector3(5.0, -4.0, -18.0) });
+            c.pointLoads.push_back({ 2, LoadFrame::Global, 1.2, Vector3(6.0, 2.0, 0.0) });   // choc horizontal sur un poteau
+        });
+    } });
+    list.push_back({ "22_portique_charges_partielles", "Portique spatial : charges uniformes sur une partie des barres", [](BeamFormulation f) {
+        return spatialFrame(f, false, [](LoadCase3D& c) {
+            c.distributedLoads.push_back({ 11, LoadFrame::Local, Vector3(1.5, 2.0, -12.0), Vector3(1.5, 2.0, -12.0), 1.0, 4.0 });
+            c.distributedLoads.push_back({ 12, LoadFrame::Global, Vector3(0, 0, -9.0), Vector3(0, 0, -9.0), 0.5, 2.5 });
+            c.distributedLoads.push_back({ 14, LoadFrame::Global, Vector3(0, 0, -7.0), Vector3(0, 0, -7.0), 2.0 });
+            c.distributedLoads.push_back({ 2, LoadFrame::Global, Vector3(4.0, 0, 0), Vector3(4.0, 0, 0), 0.0, 1.5 });   // vent en pied de poteau
+        });
+    } });
     list.push_back({ "17_mecanisme_rotule", "Mécanisme : console relâchée (My) au droit de son encastrement", [](BeamFormulation f) {
         StructuralModel3D m = base(f);
         m.addNode(1, Vector3::Zero());
@@ -401,6 +419,24 @@ bool writeTcl(const StructuralModel3D& m, BeamFormulation f, const fs::path& tcl
               << (codeY ? " -releasey " + std::to_string(codeY) : std::string()) << (codeZ ? " -releasez " + std::to_string(codeZ) : std::string()) << '\n';
     }
     const LoadCase3D& c = m.loadCases().front();
+    // ElasticTimoshenkoBeam3d (OpenSees 3.8.0) n'applique ni -beamPoint ni -beamUniform partiel : il les ignore avec
+    // « ElasticTimoshenkoBeam3d::addLoad() - load type unknown » (constaté sur les cas 21 et 22) ; pas de référence.
+    auto timoshenko = [&](int elementId) {
+        return std::any_of(m.elements().begin(), m.elements().end(),
+                           [&](const ElementDefinition& d) { return d.id == elementId && d.formulation == BeamFormulation::Timoshenko; });
+    };
+    for (const auto& l : c.pointLoads)
+        if (timoshenko(l.elementId))
+        {
+            *unsupported = "force ponctuelle sur une barre de Timoshenko (ignorée par ElasticTimoshenkoBeam3d d'OpenSees 3.8.0 : « load type unknown »)";
+            return false;
+        }
+    for (const auto& l : c.distributedLoads)
+        if (timoshenko(l.elementId) && (l.startPosition > 0.0 || l.endPosition))
+        {
+            *unsupported = "charge partielle sur une barre de Timoshenko (ignorée par ElasticTimoshenkoBeam3d d'OpenSees 3.8.0 : « load type unknown »)";
+            return false;
+        }
     o << "timeSeries Linear 1\npattern Plain 1 1 {\n";
     for (const auto& l : c.nodalLoads)
         o << "  load " << l.nodeId << ' ' << l.force.x() << ' ' << l.force.y() << ' ' << l.force.z() << ' ' << l.moment.x() << ' ' << l.moment.y() << ' ' << l.moment.z() << '\n';
@@ -414,7 +450,22 @@ bool writeTcl(const StructuralModel3D& m, BeamFormulation f, const fs::path& tcl
         // OpenSees : charge uniforme en composantes locales (Wy, Wz, Wx) ; charge globale projetée (même projection que TSA)
         const auto e = m.createElement(*std::find_if(m.elements().begin(), m.elements().end(), [&](const ElementDefinition& d) { return d.id == l.elementId; }));
         const Vector3 q = l.frame == LoadFrame::Global ? Vector3(e->localAxes().rotation() * l.startIntensity) : l.startIntensity;
-        o << "  eleLoad -ele " << l.elementId << " -type -beamUniform " << q.y() << ' ' << q.z() << ' ' << q.x() << '\n';
+        const double length = e->length(), a = l.startPosition / length, b = l.endPosition.value_or(length) / length;
+        o << "  eleLoad -ele " << l.elementId << " -type -beamUniform " << q.y() << ' ' << q.z() << ' ' << q.x();
+        if (a > 0.0 || b < 1.0) o << ' ' << a << ' ' << b;   // charge partielle : aOverL bOverL
+        o << '\n';
+    }
+    for (const auto& l : c.pointLoads)
+    {
+        // OpenSees : -beamPoint Py Pz xL Px, composantes locales
+        const auto e = m.createElement(*std::find_if(m.elements().begin(), m.elements().end(), [&](const ElementDefinition& d) { return d.id == l.elementId; }));
+        const Vector3 p = l.frame == LoadFrame::Global ? Vector3(e->localAxes().rotation() * l.force) : l.force;
+        o << "  eleLoad -ele " << l.elementId << " -type -beamPoint " << p.y() << ' ' << p.z() << ' ' << l.position / e->length() << ' ' << p.x() << '\n';
+    }
+    if (!c.distributedMoments.empty())
+    {
+        *unsupported = "moment réparti (aucune charge d'élément équivalente dans OpenSees 3.8.0)";
+        return false;
     }
     o << "}\nsystem BandGeneral\nnumberer RCM\nconstraints Transformation\nintegrator LoadControl 1.0\nalgorithm Linear\nanalysis Static\n";
     o << "set status [analyze 1]\nreactions\n";

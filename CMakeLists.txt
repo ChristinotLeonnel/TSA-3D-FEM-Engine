@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.21)
-project(Fem3D VERSION 0.2.0 LANGUAGES CXX)
+project(Fem3D VERSION 0.3.0 LANGUAGES CXX)
 
 # Moteur EF 3D autonome (README.md) : C++20, Eigen, aucune dépendance Qt.
 set(CMAKE_CXX_STANDARD 20)
@@ -51,6 +51,7 @@ add_executable(fem3d_tests
     tests/analytical/test_releases.cpp
     tests/analytical/test_springs.cpp
     tests/analytical/test_audit_gaps.cpp
+    tests/analytical/test_member_loads.cpp
     tests/integration/test_frames.cpp
 )
 target_include_directories(fem3d_tests PRIVATE tests)

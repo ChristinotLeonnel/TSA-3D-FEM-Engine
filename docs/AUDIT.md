@@ -8,8 +8,8 @@ qui a été corrigé. Les détails techniques sont dans les rapports cités.
 | Volet | Méthode | Rapport |
 |---|---|---|
 | Formulations (matrices, fonctions de forme, charges, rotules, sections, solveur) | Audit indépendant en lecture seule : dérivation symbolique (sympy) des équations de Timoshenko, sonde C++ compilée avec les sources du moteur, séries exactes de Saint-Venant | [verification/INDEPENDENT_FORMULATION_AUDIT.md](verification/INDEPENDENT_FORMULATION_AUDIT.md) |
-| Validation croisée | 20 cas × 2 formulations contre OpenSees 3.8.0, tolérances fixées avant les essais | [validation/VALIDATION_OPENSEES.md](validation/VALIDATION_OPENSEES.md) |
-| Solutions analytiques | 41 tests (unitaires, analytiques, intégration) | `tests/` |
+| Validation croisée | 22 cas × 2 formulations contre OpenSees 3.8.0 (cas 21 et 22 ajoutés en 0.3.0, après cet audit), tolérances fixées avant les essais | [validation/VALIDATION_OPENSEES.md](validation/VALIDATION_OPENSEES.md) |
+| Solutions analytiques | 41 tests à la date de l'audit ; 49 depuis 0.3.0 (charges sur barre, non couvertes par cet audit) | `tests/` |
 | Sources | Bibliographie et webographie vérifiées, manifeste des sources (statut de consultation, licence) | [REFERENCES.md](references/REFERENCES.md), [WEBOGRAPHY.md](references/WEBOGRAPHY.md), [SOURCES_MANIFEST.md](references/SOURCES_MANIFEST.md) |
 | Intégration dans TSA | Moteur `fem3d` comparé à OpenSees dans TSA (tests 476 à 480) | [INTEGRATION_TSA.md](INTEGRATION_TSA.md) |
 

@@ -12,7 +12,7 @@ flowchart TD
     G --> C["Fem3DAdapter::convert"]
     C --> E{"Données refusées ?<br/>(relâchement N/V/T, axes différents,<br/>plusieurs cas sans combinaison…)"}
     E -->|"oui"| R1["Refus : erreur listée"]
-    E -->|"non"| O{"Hors périmètre ?<br/>(charge ponctuelle ou partielle,<br/>moment réparti)"}
+    E -->|"non"| O{"Hors périmètre ?<br/>(coque, treillis, câble)"}
     O -->|"oui, fallback = none"| R2["Refus : raisons listées<br/>« choisir OpenSees ou activer le secours »"]
     O -->|"oui, fallback = opensees"| AV{"OpenSees disponible ?"}
     AV -->|"non"| R3["Refus"]

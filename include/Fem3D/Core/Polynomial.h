@@ -3,6 +3,8 @@
 // Polynôme p(x) = c0 + c1 x + c2 x² + … (abscisse locale x de l'élément, 0 ≤ x ≤ L).
 // Les efforts internes sous charges réparties linéaires sont polynomiaux (N, V : degré ≤ 2 ; M : degré ≤ 3) :
 // leurs intégrales (rotations, déplacements) sont calculées exactement, sans quadrature.
+// Polynôme par morceaux : charges ponctuelles et charges sur une partie de la barre (efforts discontinus ou de
+// dérivée discontinue aux abscisses des charges), un polynôme par intervalle sans discontinuité.
 
 #include <algorithm>
 #include <cstddef>
@@ -71,6 +73,37 @@ public:
 
 private:
     std::vector<double> m_c;
+};
+
+/// Fonction polynomiale par morceaux sur [x₀, x_n] : sur [x_k, x_{k+1}[, p(x) = P_k(x − x_k) (variable locale du
+/// morceau : coefficients bien conditionnés quelle que soit l'unité de longueur). Continue à droite : à une abscisse de
+/// rupture x_k (charge ponctuelle), la valeur est celle du morceau qui commence en x_k ; le dernier morceau vaut
+/// jusqu'à x_n compris.
+class PiecewisePolynomial
+{
+public:
+    PiecewisePolynomial() = default;
+    /// starts : débuts des morceaux, croissants ; pieces : un polynôme (en x − début) par morceau.
+    PiecewisePolynomial(std::vector<double> starts, std::vector<Polynomial> pieces)
+        : m_starts(std::move(starts))
+        , m_pieces(std::move(pieces))
+    {
+    }
+
+    const std::vector<double>& starts() const { return m_starts; }
+    const std::vector<Polynomial>& pieces() const { return m_pieces; }
+
+    double operator()(double x) const
+    {
+        if (m_pieces.empty()) return 0.0;
+        const auto it = std::upper_bound(m_starts.begin(), m_starts.end(), x);
+        const std::size_t k = it == m_starts.begin() ? 0 : std::min<std::size_t>(static_cast<std::size_t>(it - m_starts.begin()) - 1, m_pieces.size() - 1);
+        return m_pieces[k](x - m_starts[k]);
+    }
+
+private:
+    std::vector<double> m_starts;
+    std::vector<Polynomial> m_pieces;
 };
 
 } // namespace TSA::Fem3D

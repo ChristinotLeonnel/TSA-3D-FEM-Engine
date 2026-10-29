@@ -11,8 +11,8 @@ Prérequis : CMake ≥ 3.21, compilateur C++20 (MSVC 2022 ou plus récent, GCC, 
 ```bat
 cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
 cmake --build build
-build\fem3d_tests.exe                       :: 41 tests
-build\fem3d_opensees_benchmarks.exe         :: 20 cas × 2 formulations (OpenSees 3.8.0 requis)
+build\fem3d_tests.exe                       :: 49 tests
+build\fem3d_opensees_benchmarks.exe         :: 22 cas × 2 formulations (OpenSees 3.8.0 requis)
 build\fem3d_example.exe sortie.json         :: portique spatial → JSON
 ```
 

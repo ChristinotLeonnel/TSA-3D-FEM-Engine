@@ -91,14 +91,11 @@ LoadCaseResults LinearStaticAnalysis::run(int loadCaseId) const
     }
     for (const auto& element : m_elements)
     {
-        std::vector<const DistributedLoad3D*> loads;
-        for (const DistributedLoad3D& l : loadCase.distributedLoads)
-            if (l.elementId == element->id()) loads.push_back(&l);
         Vector12 global;
         const auto elementDofs = dofs.elementDofs(element->startNodeId(), element->endNodeId());
         for (int a = 0; a < kElementDofs; ++a) global(a) = u(elementDofs[static_cast<std::size_t>(a)]);
         const Vector12 local = element->localAxes().transformation() * global;   // d_local = T d_global
-        const BeamResponse response(*element, local, LocalLinearLoad::fromLoads(*element, loads));
+        const BeamResponse response(*element, local, LocalElementLoads::fromLoadCase(*element, loadCase));
         out.elements.push_back(response.result(m_options.stationsPerElement));
     }
     out.equilibrium = checkEquilibrium(loadCase, out.reactions, out.springs);
@@ -124,7 +121,7 @@ AnalysisResults LinearStaticAnalysis::runAll() const
 EquilibriumCheck LinearStaticAnalysis::checkEquilibrium(const LoadCase3D& loadCase, const std::vector<ReactionResult>& reactions,
                                                         const std::vector<SpringResult>& springs) const
 {
-    // Résultante et moment (par rapport à l'origine) des charges appliquées, charges réparties exactes comprises,
+    // Résultante et moment (par rapport à l'origine) des charges appliquées, charges sur barre exactes comprises,
     // puis des réactions : leur somme doit être nulle.
     EquilibriumCheck c;
     for (const NodalLoad3D& l : loadCase.nodalLoads)
@@ -135,20 +132,28 @@ EquilibriumCheck LinearStaticAnalysis::checkEquilibrium(const LoadCase3D& loadCa
     }
     for (const auto& element : m_elements)
     {
-        std::vector<const DistributedLoad3D*> loads;
-        for (const DistributedLoad3D& l : loadCase.distributedLoads)
-            if (l.elementId == element->id()) loads.push_back(&l);
+        const LocalElementLoads loads = LocalElementLoads::fromLoadCase(*element, loadCase);
         if (loads.empty()) continue;
-        const LocalLinearLoad q = LocalLinearLoad::fromLoads(*element, loads);
         const Matrix3 toGlobal = element->localAxes().rotation().transpose();
-        const double l = element->length();
-        const Vector3 start = m_model.node(element->startNodeId()).position;
-        // Charge trapézoïdale : résultante (q1 + q2) L / 2 appliquée à x̄ = L (q1 + 2 q2) / (3 (q1 + q2)), par composante
-        // → moment calculé exactement : ∫ (P(s) × q(s)) ds = P_i × R + x × ∫ s q(s) ds
-        const Vector3 resultant = toGlobal * (0.5 * l * (q.start + q.end));
-        const Vector3 firstMoment = toGlobal * (l * l * (q.start / 6.0 + q.end / 3.0));   // ∫₀ᴸ s q(s) ds
-        c.appliedForce += resultant;
-        c.appliedMoment += start.cross(resultant) + element->localAxes().xAxis().cross(firstMoment);
+        const Vector3 start = m_model.node(element->startNodeId()).position, axis = element->localAxes().xAxis();
+        // Charge linéaire sur [a, b] : résultante (q_a + q_b)(b − a)/2 ; moment exact ∫ (P(s) × q(s)) ds = P_i × R + x × ∫ s q(s) ds,
+        // avec ∫ₐᵇ s q(s) ds = a R + (b − a)² (q_a/6 + q_b/3)
+        for (const LocalLoadSegment& s : loads.distributed)
+        {
+            const double length = s.end - s.start;
+            const Vector3 resultant = toGlobal * (0.5 * length * (s.startIntensity + s.endIntensity));
+            const Vector3 firstMoment = s.start * resultant + toGlobal * (length * length * (s.startIntensity / 6.0 + s.endIntensity / 3.0));
+            c.appliedForce += resultant;
+            c.appliedMoment += start.cross(resultant) + axis.cross(firstMoment);
+        }
+        for (const LocalPointForce& p : loads.points)
+        {
+            const Vector3 force = toGlobal * p.force;
+            c.appliedForce += force;
+            c.appliedMoment += (start + p.position * axis).cross(force);
+        }
+        for (const LocalLoadSegment& s : loads.moments)   // couple résultant (c_a + c_b)(b − a)/2, sans force
+            c.appliedMoment += toGlobal * (0.5 * (s.end - s.start) * (s.startIntensity + s.endIntensity));
     }
     for (const ReactionResult& r : reactions)
     {

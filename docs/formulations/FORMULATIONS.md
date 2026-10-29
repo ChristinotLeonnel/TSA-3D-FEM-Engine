@@ -12,7 +12,7 @@ sont dans [../theory/THEORY.md](../theory/THEORY.md) ; les sources dans [../refe
 | Rotules de flexion My, Mz | implémentées | §6 | niveau 4 |
 | Appuis élastiques nodaux | implémentés | §7 | niveau 4 |
 | Barre de treillis (effort normal seul) | **non implémentée** | — | — |
-| Charges ponctuelles, partielles, moments répartis | **non implémentés** | — | — |
+| Charges ponctuelles, partielles, moments répartis | implémentés (0.3.0) | idem | idem |
 | Torsion non uniforme, gauchissement (Vlasov) | **non implémentée** | — | — |
 
 Niveaux : [../validation/QUALIFICATION.md](../validation/QUALIFICATION.md).

@@ -45,9 +45,12 @@ que leurs résultats soient présentés de la même façon :
 ## 4. Périmètre et logique de secours
 
 **Périmètre** : statique linéaire 3D ; poutres et poteaux ; rotules My, Mz ; appuis et ressorts ; charges nodales,
-réparties uniformes ou linéaires sur toute la longueur, poids propre.
+poids propre, charges sur barre (réparties uniformes ou linéaires sur toute la longueur ou sur une partie, forces
+ponctuelles, moments répartis ; depuis 0.3.0, test TSA 530).
 
-**Hors périmètre** (refusé avec la raison) : charges ponctuelles ou partielles sur barre, moments répartis, coques.
+**Hors périmètre** (refusé avec la raison) : coques, treillis, câbles. Ces éléments sont déjà refusés en amont par la
+validation générique de TSA (familles d'éléments, coques) : le secours OpenSees de Fem3D n'a donc plus de cas
+atteignable depuis l'interface ; sa logique reste testée directement sur le moteur (test TSA 478).
 Les treillis, les câbles, la non-linéarité et l'analyse modale sont refusés en amont par la validation générique de
 TSA, à partir des capacités déclarées.
 

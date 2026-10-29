@@ -13,7 +13,8 @@ extrémités, les efforts internes et la déformée exacts le long des barres (c
 contraintes de résistance des matériaux. Elle contrôle l'équilibre global, désigne les mécanismes et avertit des
 quasi-mécanismes.
 
-Validation : **20 cas × 2 formulations comparés à OpenSees 3.8.0 (2 657 valeurs, 0 hors tolérance)**, 41 tests
+Validation : **22 cas × 2 formulations comparés à OpenSees 3.8.0 (2 993 valeurs, 0 hors tolérance ; 3 comparaisons non
+faisables, raison écrite)**, 49 tests
 analytiques et unitaires, audit indépendant des formulations ([docs/AUDIT.md](docs/AUDIT.md)).
 
 > Fem3D est intégré à TSA comme **moteur secondaire** `fem3d` : OpenSees reste le moteur 3D par défaut tant que la
@@ -37,7 +38,7 @@ Intégré comme sous-projet (`add_subdirectory`, comme le fait TSA), seule la bi
 ## Tester
 
 ```bat
-build\fem3d_tests.exe            :: 41 tests unitaires, analytiques et d'intégration
+build\fem3d_tests.exe            :: 49 tests unitaires, analytiques et d'intégration
 ctest --test-dir build           :: mêmes tests, puis comparaison OpenSees
 ```
 
@@ -91,13 +92,14 @@ Le moteur couvre :
 
 - les petits déplacements et l'élasticité linéaire ;
 - les sections constantes et la torsion de Saint-Venant uniforme, **sans gauchissement ni bimoment** ;
-- les charges nodales et les charges réparties linéaires sur toute la longueur d'une barre, en repère local ou global ;
+- les charges nodales ; sur les barres, en repère local ou global : charges réparties linéaires sur toute la longueur
+  ou sur une partie [a, b], forces ponctuelles, moments répartis (torsion et flexion) linéaires sur [a, b] ;
 - les appuis, les déplacements imposés et les appuis élastiques (ressorts nodaux découplés, axes globaux) ;
 - les relâchements d'extrémité : rotules My et Mz en i et/ou en j, par condensation statique.
 
 Il ne traite **pas** : la non-linéarité, la dynamique, les barres de treillis, les relâchements de N, V ou T, les
-rotules semi-rigides, les ressorts couplés ou en repère incliné, les excentrements, les charges ponctuelles ou
-partielles sur barre ni les moments répartis. Détails : [docs/limitations/KNOWN_LIMITATIONS.md](docs/limitations/KNOWN_LIMITATIONS.md).
+rotules semi-rigides, les ressorts couplés ou en repère incliné, les excentrements, les couples concentrés sur barre
+ni les charges thermiques. Détails : [docs/limitations/KNOWN_LIMITATIONS.md](docs/limitations/KNOWN_LIMITATIONS.md).
 
 ## Licence
 
