@@ -90,7 +90,9 @@ organisent l'enseignement et ne disent rien de la maturité du moteur.
 | Timoshenko | **4** dans Fem3D ; non exposé dans TSA | Exposer la formulation dans TSA (aires de cisaillement), puis niveau 5. |
 | Charges linéaires (trapézoïdales) sur toute la longueur | **2**, plus une comparaison indirecte à OpenSees dans TSA (test 477) | Niveau 3 : référence directe (OpenSees plus récent ou second code). |
 | Rotules de Timoshenko hors axes globaux, déplacements imposés, contraintes | **2** | Niveau 3 : référence indépendante. |
-| Charges ponctuelles, partielles, moments répartis, treillis | **non implémenté** (niveau 0) | Niveau 1. |
+| Forces ponctuelles et charges uniformes partielles (Euler–Bernoulli), 0.3.0 | **3** (benchmarks 21, 22) | Niveau 4 : audit indépendant des formulations. |
+| Charges sur barre en Timoshenko, charges trapézoïdales partielles, moments répartis, 0.3.0 | **2**, plus une comparaison indirecte à OpenSees dans TSA (test 530) | Niveau 3 : référence directe (OpenSees n'en fournit pas). |
+| Treillis | **non implémenté** (niveau 0) | Niveau 1. |
 | **Moteur dans TSA** | **4 sur le périmètre qualifié** ; **niveau 5 non atteint** | Voir la matrice ci-dessous. |
 
 Le niveau 5 n'est **pas** déclaré atteint parce que les tests passent : deux de ses trois critères n'ont aucune preuve.

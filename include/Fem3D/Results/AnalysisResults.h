@@ -14,7 +14,7 @@
 namespace TSA::Fem3D
 {
 
-inline constexpr char kEngineVersion[] = "TSA Fem3D 0.2.0";
+inline constexpr char kEngineVersion[] = "TSA Fem3D 0.3.0";
 
 struct NodalResult
 {

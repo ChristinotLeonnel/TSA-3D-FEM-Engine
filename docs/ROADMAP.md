@@ -11,12 +11,14 @@ Chaque étape s'achève par ses tests analytiques, ses benchmarks OpenSees (ou l
 | 0.1 | Rotules My, Mz par condensation statique (benchmarks 12 à 17). |
 | 0.2 | Appuis élastiques nodaux (benchmarks 18 à 20) ; audit indépendant et corrections (critère de mécanisme indépendant des unités, Wt, avertissements de quasi-mécanisme, résidu de résolution) ; bibliographie vérifiée ; qualification par niveaux ; intégration dans TSA comme moteur secondaire `fem3d`, avec comparaison et secours OpenSees explicites. |
 
+| 0.3 | Charges sur barre : forces ponctuelles, charges réparties linéaires sur une partie [a, b], moments répartis ; forces nodales équivalentes exactes (dont rotations de section de Timoshenko pour les couples), efforts et déformée exacts par morceaux ; benchmarks 21 et 22 (`-beamPoint`, `-beamUniform` partiel) ; intégration dans TSA (test 530). |
+
 ## Prochaines étapes
 
 1. **Qualification dans TSA (niveau 5)** : mode comparaison sur les projets d'exemple et les cas de
    `TSA/docs/validation` ; relecture humaine de la théorie. Condition pour faire de Fem3D le moteur par défaut.
-2. **Charges sur barre courantes** : charge ponctuelle (benchmark `-beamPoint`), charge partielle, moment réparti ;
-   efforts et déformée exacts par morceaux. Elles sont fréquentes dans les projets réels.
+2. **Charges sur barre : niveau 4** — audit indépendant des formulations des charges ponctuelles, partielles et des
+   moments répartis ; référence pour Timoshenko et pour les moments répartis (second code).
 3. **Barre de treillis** (6 DDL de translation, effort normal seul), puis câble linéaire si besoin.
 4. **Timoshenko dans TSA** : transmettre les aires de cisaillement des sections de TSA et proposer la formulation
    dans les options du moteur.

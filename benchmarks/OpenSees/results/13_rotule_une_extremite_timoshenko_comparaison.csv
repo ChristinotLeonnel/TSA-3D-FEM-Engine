@@ -11,7 +11,7 @@ deplacement,2,Uz,0,0,0,absolu,OK
 deplacement,2,Rx,0,0,0,absolu,OK
 deplacement,2,Ry,0,0,0,absolu,OK
 deplacement,2,Rz,0,0,0,absolu,OK
-reaction,1,Fx,24.986039090546466,24.98603909054647,3.5527136788005009e-15,1.422e-16,OK
+reaction,1,Fx,24.986039090546463,24.98603909054647,7.1054273576010019e-15,2.844e-16,OK
 reaction,1,Fy,0,0,0,absolu,OK
 reaction,1,Fz,0,0,0,absolu,OK
 reaction,1,Mx,0,0,0,absolu,OK
@@ -24,7 +24,7 @@ reaction,2,Mx,0,0,0,absolu,OK
 reaction,2,My,0,0,0,absolu,OK
 reaction,2,Mz,0,0,0,absolu,OK
 effort_extremite,1,N_i,0,0,0,absolu,OK
-effort_extremite,1,Vy_i,-24.986039090546466,-24.98603909054647,3.5527136788005009e-15,1.422e-16,OK
+effort_extremite,1,Vy_i,-24.986039090546463,-24.98603909054647,7.1054273576010019e-15,2.844e-16,OK
 effort_extremite,1,Vz_i,0,0,0,absolu,OK
 effort_extremite,1,T_i,0,0,0,absolu,OK
 effort_extremite,1,My_i,0,0,0,absolu,OK

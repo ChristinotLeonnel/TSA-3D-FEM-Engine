@@ -52,6 +52,10 @@ struct Tolerance
     static constexpr double weakPivot = 1e-8;
     /// Résidu relatif ‖K_ff U_f − F‖ / ‖F‖ au-delà duquel un avertissement est émis.
     static constexpr double solutionResidual = 1e-8;
+    /// Position d'une charge sur une barre, relative à sa longueur L : une position dans [−t L, (1 + t) L] est ramenée
+    /// dans [0, L], au-delà elle est refusée ; deux abscisses plus proches que t L sont confondues ; un intervalle de
+    /// charge plus court que t L est refusé (vide).
+    static constexpr double relativeLoadPosition = 1e-9;
 };
 
 } // namespace TSA::Fem3D

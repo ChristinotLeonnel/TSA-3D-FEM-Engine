@@ -31,9 +31,17 @@ validation ([../validation/VALIDATION_PLAN.md](../validation/VALIDATION_PLAN.md)
 
 ## 3. Charges
 
-- Charges réparties **linéaires sur toute la longueur** seulement. Pas de charge ponctuelle sur barre, de charge
-  partielle, ni de moment réparti : dans TSA, ces charges sont refusées par Fem3D (ou confiées à OpenSees si
-  l'utilisateur l'a choisi).
+- Charges sur barre (depuis 0.3.0) : charges réparties linéaires sur toute la longueur ou sur [a, b], forces
+  ponctuelles, moments répartis linéaires sur [a, b]. Pas de **couple concentré** sur barre (seulement aux nœuds), ni
+  de charge répartie non linéaire (parabolique…).
+- Charges sur barre et **références** : OpenSees 3.8.0 ne fournit une comparaison directe que pour les forces
+  ponctuelles et les charges uniformes partielles, et seulement sur `elasticBeamColumn` (Euler–Bernoulli) ;
+  `ElasticTimoshenkoBeam3d` les ignore (« load type unknown »). Les moments répartis n'ont aucune commande OpenSees.
+  Ces cas sont vérifiés par solutions analytiques, compatibilité exacte et invariance par subdivision
+  ([../validation/VALIDATION_PLAN.md](../validation/VALIDATION_PLAN.md)).
+- Résultats d'un élément aux **stations équidistantes** : sous une force ponctuelle située entre deux stations, le
+  maximum du moment (et le saut d'effort tranchant) n'est pas une station ; les champs internes, eux, sont exacts en
+  toute abscisse (`BeamResponse::forcesAt`). À l'abscisse même de la force, la valeur donnée est celle du côté j.
 - Pas de charge thermique, de précontrainte, ni de défaut initial.
 - Les charges trapézoïdales ne sont comparées à OpenSees qu'indirectement (OpenSees 3.8.0 ignore la variation de
   `-beamUniform` en 3D, sans message).
@@ -64,7 +72,7 @@ validation ([../validation/VALIDATION_PLAN.md](../validation/VALIDATION_PLAN.md)
 
 | Point | État | Suite |
 |---|---|---|
-| Charges ponctuelles, partielles, moments répartis | non implémentés ; refusés par le moteur `fem3d` de TSA (ou confiés à OpenSees si l'utilisateur l'a choisi) | [ROADMAP.md](../ROADMAP.md) étape 2 |
+| Charges ponctuelles, partielles, moments répartis | implémentés (0.3.0) ; niveau 3 en Euler–Bernoulli pour les forces ponctuelles et charges uniformes partielles, 2 sinon ([QUALIFICATION.md](../validation/QUALIFICATION.md)) | audit indépendant, référence pour Timoshenko et moments répartis |
 | Qualification de niveau 5 dans TSA | non atteinte ([MATURITY_LEVELS.md](../validation/MATURITY_LEVELS.md)) | comparaison systématique, relecture humaine |
 | Exécutable de tests de TSA lancé directement en mode `offscreen` | arrêt brutal (0xC0000409) dans la suite d'affichage du maillage (après le test 342), observé une fois ; CTest (35/35) ne le reproduit pas ; non vérifié sur la version antérieure | à diagnostiquer dans le dépôt TSA |
 | Traductions EN et MG des textes d'interface du moteur dans TSA | absentes des fichiers `.ts` | [TRANSLATION_STRATEGY.md](../i18n/TRANSLATION_STRATEGY.md) §4 |

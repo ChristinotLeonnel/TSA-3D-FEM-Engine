@@ -5,7 +5,7 @@
 #include "Fem3D/Elements/Timoshenko3D.h"
 
 #include <cmath>
-#include <set>
+#include <map>
 
 namespace TSA::Fem3D
 {
@@ -15,6 +15,13 @@ namespace
 std::string elementLabel(int id) { return "élément " + std::to_string(id); }
 
 bool isFinite(const Vector3& v) { return v.allFinite(); }
+
+/// Position x d'une charge sur une barre de longueur l : refusée hors de [−t l, (1 + t) l] (Tolerance::relativeLoadPosition).
+bool onMember(double x, double l)
+{
+    const double t = Tolerance::relativeLoadPosition * l;
+    return std::isfinite(x) && x >= -t && x <= l + t;
+}
 } // namespace
 
 void StructuralModel3D::addMaterial(const ElasticMaterial& material)
@@ -114,12 +121,9 @@ void StructuralModel3D::validate() const
 {
     if (m_nodes.empty()) throw Fem3DError(ErrorCode::InvalidInput, "modèle sans nœud");
     if (m_elements.empty()) throw Fem3DError(ErrorCode::InvalidInput, "modèle sans élément");
-    std::set<int> elementIds;
+    std::map<int, double> elementLength;
     for (const auto& e : m_elements)
-    {
-        createElement(e);   // références, géométrie, propriétés de la formulation
-        elementIds.insert(e.id);
-    }
+        elementLength[e.id] = createElement(e)->length();   // références, géométrie, propriétés de la formulation
     for (const auto& [id, r] : m_restraints)
     {
         nodeIndex(id);
@@ -147,12 +151,42 @@ void StructuralModel3D::validate() const
             if (!isFinite(l.force) || !isFinite(l.moment))
                 throw Fem3DError(ErrorCode::InvalidInput, "charge nodale non finie (cas " + std::to_string(c.id) + ", nœud " + std::to_string(l.nodeId) + ")");
         }
+        // Charges sur barre : barre connue, valeurs finies, positions sur la barre, intervalle non vide
+        auto where = [&](int elementId) { return " (cas " + std::to_string(c.id) + ", " + elementLabel(elementId) + ")"; };
+        auto lengthOf = [&](const char* what, int elementId) {
+            const auto it = elementLength.find(elementId);
+            if (it == elementLength.end())
+                throw Fem3DError(ErrorCode::UnknownReference, std::string(what) + " sur un " + elementLabel(elementId) + " inconnu (cas " + std::to_string(c.id) + ")");
+            return it->second;
+        };
+        auto checkInterval = [&](const char* what, int elementId, double a, const std::optional<double>& end) {
+            const double l = lengthOf(what, elementId), b = end.value_or(l);
+            if (!onMember(a, l) || !onMember(b, l))
+                throw Fem3DError(ErrorCode::InvalidInput, std::string(what) + " hors de la barre : [" + std::to_string(a) + ", " + std::to_string(b)
+                                                              + "] pour une longueur " + std::to_string(l) + where(elementId));
+            if (b - a <= Tolerance::relativeLoadPosition * l)
+                throw Fem3DError(ErrorCode::InvalidInput, std::string(what) + " sur un intervalle vide ou inversé : [" + std::to_string(a) + ", "
+                                                              + std::to_string(b) + "]" + where(elementId));
+        };
         for (const auto& l : c.distributedLoads)
         {
-            if (!elementIds.count(l.elementId))
-                throw Fem3DError(ErrorCode::UnknownReference, "charge répartie sur un " + elementLabel(l.elementId) + " inconnu (cas " + std::to_string(c.id) + ")");
+            checkInterval("charge répartie", l.elementId, l.startPosition, l.endPosition);
             if (!isFinite(l.startIntensity) || !isFinite(l.endIntensity))
-                throw Fem3DError(ErrorCode::InvalidInput, "charge répartie non finie (cas " + std::to_string(c.id) + ", " + elementLabel(l.elementId) + ")");
+                throw Fem3DError(ErrorCode::InvalidInput, "charge répartie non finie" + where(l.elementId));
+        }
+        for (const auto& l : c.distributedMoments)
+        {
+            checkInterval("moment réparti", l.elementId, l.startPosition, l.endPosition);
+            if (!isFinite(l.startIntensity) || !isFinite(l.endIntensity))
+                throw Fem3DError(ErrorCode::InvalidInput, "moment réparti non fini" + where(l.elementId));
+        }
+        for (const auto& l : c.pointLoads)
+        {
+            const double length = lengthOf("charge ponctuelle", l.elementId);
+            if (!onMember(l.position, length))
+                throw Fem3DError(ErrorCode::InvalidInput, "charge ponctuelle hors de la barre : position " + std::to_string(l.position) + " pour une longueur "
+                                                              + std::to_string(length) + where(l.elementId));
+            if (!isFinite(l.force)) throw Fem3DError(ErrorCode::InvalidInput, "charge ponctuelle non finie" + where(l.elementId));
         }
     }
 }

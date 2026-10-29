@@ -82,20 +82,42 @@ analytiques retrouvent :
 Ces valeurs de Timoshenko ont été dérivées indépendamment par résolution symbolique des équations de Timoshenko
 (docs/verification/INDEPENDENT_FORMULATION_AUDIT.md).
 
+### 4.1 Charges sur barre : partielles, ponctuelles, moments répartis (0.3.0)
+
+Le même théorème de Betti donne les forces nodales équivalentes exactes de toute charge sur barre :
+
+```text
+charge répartie q sur [a, b] :   f_eq,k = ∫ₐᵇ N_k(x) q(x) dx            (Gauss à 4 points sur [a, b], exacte)
+force ponctuelle P en x_P :      f_eq,k = N_k(x_P) P
+moment réparti c sur [a, b] :    f_eq,k = ∫ₐᵇ Θ_k(x) · c(x) dx          (Gauss à 4 points, exacte : degré ≤ 3)
+```
+
+Θ_k est la **rotation de section** de la solution homogène associée au DDL k : la torsion θx est interpolée
+linéairement (Saint-Venant) ; en flexion, Θz = v′ − γy et Θy = −w′ + γz, où la distorsion γ = V / (G As) est
+constante sous des déplacements d'extrémité (V = −(K e_k) à l'extrémité i). En Euler–Bernoulli γ = 0 et Θz = v′.
+Les dérivées N_k′ sont exactes : les fonctions de forme des deux formulations sont cubiques en ξ.
+
+**Statut de vérification** : propriétés vérifiées numériquement dans le dépôt (barre bi-encastrée : la déformée
+intégrée depuis i revient à zéro en j pour toutes ces charges, test `MemberLoads_ExactCompatibility_FixedFixed_AllLoadTypes` ;
+solutions de résistance des matériaux ; invariance par subdivision) ; pas encore d'audit indépendant écrit.
+
 ## 5. Efforts internes et déformée
 
 **Efforts d'extrémité** : `f = K_local d_local − f_eq`.
 
-**Efforts internes** : ils découlent de l'équilibre du tronçon [0, x], avec une charge q(s) = a + b s par
-composante :
+**Efforts internes** : ils découlent de l'équilibre du tronçon [0, x], avec la charge répartie q, le moment
+réparti c et les forces ponctuelles P_k en x_k :
 
 ```text
-N  = −f_ix − ∫₀ˣ qx        Vy = −f_iy − ∫₀ˣ qy        Vz = −f_iz − ∫₀ˣ qz        T = −m_ix
-Mz = −m_iz + x f_iy + ∫₀ˣ (x − s) qy ds               My = −m_iy − x f_iz − ∫₀ˣ (x − s) qz ds
+N  = −f_ix − ∫₀ˣ qx − Σ P_kx      Vy = −f_iy − ∫₀ˣ qy − Σ P_ky      Vz = −f_iz − ∫₀ˣ qz − Σ P_kz      T = −m_ix − ∫₀ˣ cx
+Mz = −m_iz + x f_iy + ∫₀ˣ (x − s) qy ds + Σ (x − x_k) P_ky − ∫₀ˣ cz        (dMz/dx = −Vy − cz)
+My = −m_iy − x f_iz − ∫₀ˣ (x − s) qz ds − Σ (x − x_k) P_kz − ∫₀ˣ cy        (dMy/dx =  Vz − cy)
 ```
 
-Ces efforts sont des polynômes (N et V de degré au plus 2, M de degré au plus 3) : ils sont **exacts** en toute
-abscisse.
+(Σ sur les forces telles que x_k ≤ x.) Entre deux abscisses de charge (bornes des charges réparties, forces
+ponctuelles), ces efforts sont des polynômes (N et V de degré au plus 2, M de degré au plus 3) ; sur la barre, ils sont
+**polynomiaux par morceaux** et exacts en toute abscisse. N et V sautent sous une force ponctuelle ; à son abscisse,
+la valeur donnée est celle du côté j.
 
 **Déformée** : elle est obtenue par intégration exacte de ces polynômes.
 
@@ -106,7 +128,8 @@ u  = u_i + ∫ N / E A           θx = θx_i + ∫ T / G J
 ```
 
 En Euler–Bernoulli, les termes de cisaillement sont nuls. Ce n'est pas une interpolation arbitraire : c'est la
-solution de la poutre pour les efforts exacts. Le test `ResponseConsistentWithNodalDisplacements` vérifie que
+solution de la poutre pour les efforts exacts. L'intégration se fait morceau par morceau ; déplacements et rotations
+de section restent continus (la pente v′ d'une poutre de Timoshenko saute avec V sous une force ponctuelle). Le test `ResponseConsistentWithNodalDisplacements` vérifie que
 l'intégration retrouve, en x = L, le déplacement et la rotation calculés au nœud j.
 
 ## 6. Relâchements d'extrémité (rotules My, Mz)

@@ -111,12 +111,10 @@ DenseVector GlobalAssembler::assembleLoads(const LoadCase3D& loadCase) const
         }
     for (const auto& element : m_elements)
     {
-        std::vector<const DistributedLoad3D*> loads;
-        for (const DistributedLoad3D& l : loadCase.distributedLoads)
-            if (l.elementId == element->id()) loads.push_back(&l);
+        const LocalElementLoads loads = LocalElementLoads::fromLoadCase(*element, loadCase);
         if (loads.empty()) continue;
         // f_global = Tᵀ f_local ; rotules : forces équivalentes condensées (aucune charge transmise aux DDL relâchés)
-        Vector12 local = equivalentNodalLoads(*element, LocalLinearLoad::fromLoads(*element, loads));
+        Vector12 local = equivalentNodalLoads(*element, loads);
         if (element->releases().any()) local = condensedLoads(element->localStiffnessMatrix(), local, element->releases().mask());
         const Vector12 global = element->localAxes().transformation().transpose() * local;
         const auto dofs = m_dofs.elementDofs(element->startNodeId(), element->endNodeId());

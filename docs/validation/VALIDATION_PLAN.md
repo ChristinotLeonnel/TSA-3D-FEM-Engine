@@ -39,7 +39,9 @@ quel verdict**. Les tolérances ont été fixées avant les essais et n'ont jama
 | Détection des mécanismes, invariance par les unités | kN-m et N-mm | 11, 17 | test 479 | **Validé** |
 | Quasi-mécanismes, résidu de résolution (avertissements) | ressort de 10⁻¹⁰ GJ/L | — | — | **Validé avec réserves** : analytique seul |
 | Contraintes de RDM (σ, τ, Wt, J) | τ = T/Wt, séries de Saint-Venant | OpenSees ne les calcule pas | — | **Validé avec réserves** : formules approchées documentées |
-| Charges ponctuelles et partielles sur barre, moments répartis | — | — | refusées par Fem3DEngine (test 478) | **Non testé** (non implémenté) |
+| Forces ponctuelles sur barre (0.3.0) | bi-encastrée, sur deux appuis (EB et Timoshenko), aux extrémités, compatibilité, subdivision | 21 (EB) ; Timoshenko non comparable | test 530 | **Validé** (EB) ; **validé avec réserves** (Timoshenko : analytique) |
+| Charges réparties sur une partie [a, b] (0.3.0) | console chargée sur [a, L] et [0, b] (EB et Timoshenko), compatibilité, subdivision | 22 (EB, uniformes) ; Timoshenko non comparable | test 530 | **Validé** (EB, uniformes) ; **validé avec réserves** (trapézoïdales, Timoshenko) |
+| Moments répartis, torsion et flexion (0.3.0) | console (deux formulations), compatibilité exacte bi-encastrée | aucune commande OpenSees | test 530 (référence : OpenSees de TSA, couple ramené aux nœuds par TSA) | **Validé avec réserves** : analytique et comparaison indirecte |
 | Barres de treillis, câbles, coques, non-linéarité, dynamique, gauchissement | — | — | refusés | **Non testé** (non implémenté) |
 
 Aucun **échec** n'est ouvert. Les deux défauts trouvés en cours de route (critère de mécanisme dépendant des unités, Wt
@@ -53,12 +55,14 @@ build\fem3d_tests.exe
 build\fem3d_opensees_benchmarks.exe [OpenSees.exe] [dossier]
 ```
 
-Dans TSA : suite native `engines`, tests 476 à 480 (`TSA_Tests`).
+Dans TSA : suite native `engines`, tests 476 à 480 et 530 (`TSA_Tests`).
 
 ## 5. Cas à ajouter (avant toute extension du périmètre)
 
-1. Charges ponctuelles sur barre : `eleLoad -beamPoint` d'OpenSees (référence directe).
-2. Charges partielles et moments répartis : solutions analytiques ; OpenSees seulement par décomposition.
-3. Charges trapézoïdales : version d'OpenSees qui les applique en 3D, ou deuxième code indépendant.
+1. Charges sur barre en Timoshenko et moments répartis : deuxième code indépendant (OpenSees 3.8.0 ne les applique
+   pas, ou n'a pas de commande).
+2. Charges trapézoïdales (toute la longueur ou partielles) : version d'OpenSees qui les applique en 3D, ou deuxième
+   code indépendant.
+3. Audit indépendant des formulations des charges sur barre (condition du niveau 4).
 4. Qualification dans TSA (niveau 5, [QUALIFICATION.md](QUALIFICATION.md)) : mode comparaison sur les projets
    d'exemple et les cas de `TSA/docs/validation`.

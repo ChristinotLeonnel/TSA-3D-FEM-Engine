@@ -10,6 +10,21 @@ commits cités existent dans le dépôt ([traçabilité](traceability/GIT_TRACEA
   référence API générée, guides (développeur, validation, étudiant et chercheur), site MkDocs et workflow.
 - Outils `tools/docs/` (permaliens vérifiés, générateurs, contrôle des diagrammes). Aucun changement du code de calcul.
 
+## 0.3.0 — non publiée (branche `feature/charges-sur-barre`)
+
+- Charges sur barre : `PointLoad3D` (force ponctuelle), `DistributedLoad3D` sur [a, b] (`startPosition`,
+  `endPosition` ; défaut : toute la longueur), `DistributedMoment3D` (moment réparti linéaire sur [a, b]) ;
+  repère local ou global ; positions contrôlées (`Tolerance::relativeLoadPosition`).
+- Forces nodales équivalentes exactes pour chaque type (Betti) ; moments répartis : travail sur la rotation de section
+  (Timoshenko : Θ = v′ − γ). Efforts et déformée exacts, polynômes par morceaux (`PiecewisePolynomial`).
+- Contrôle d'équilibre global étendu à ces charges.
+- Tests : 8 nouveaux (analytiques, compatibilité exacte, invariance par subdivision, données invalides) ; 49 / 49.
+- Benchmarks 21 (forces ponctuelles) et 22 (charges uniformes partielles) : Euler–Bernoulli OK (168 valeurs chacun,
+  0 hors tolérance) ; Timoshenko non comparable (OpenSees 3.8.0 ignore ces charges sur `ElasticTimoshenkoBeam3d`).
+  Résultats régénérés avec l'OpenSees 3.8.0 de conda-forge : écarts sur les cas existants ≤ 1,3e-12 en relatif
+  (OpenSees) et ≤ 2,8e-13 (Fem3D, ordre des sommes), tous les statuts inchangés.
+- TSA : le moteur `fem3d` calcule ces charges au lieu de les refuser (test 530 : égalité avec OpenSees).
+
 ## 0.2.0 — 2026-10-19
 
 Commit [75700d2](https://github.com/ChristinotLeonnel/TSA-3D-FEM-Engine/commit/75700d2bfd33c29b2fadc795fd3051f25399ad19)

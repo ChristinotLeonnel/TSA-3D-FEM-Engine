@@ -1,14 +1,18 @@
 # Validation du moteur Fem3D contre OpenSees
 
-**État au 19/10/2026** : 20 cas × 2 formulations ont été comparés à **OpenSees 3.8.0** (`TSA/thirdparty/OpenSees`),
-et la comparaison a bien été exécutée. Les cas 12 à 17 portent sur les rotules, les cas 18 à 20 sur les appuis
-élastiques (ressorts).
+**État au 29/10/2026** : 22 cas × 2 formulations ont été comparés à **OpenSees 3.8.0** (`TSA/thirdparty/OpenSees`,
+build conda-forge depuis le 2026-10-28), et la comparaison a bien été exécutée. Les cas 12 à 17 portent sur les
+rotules, les cas 18 à 20 sur les appuis élastiques (ressorts), le cas 21 sur les forces ponctuelles sur barre
+(`-beamPoint`), le cas 22 sur les charges uniformes partielles (`-beamUniform … aOverL bOverL`).
 
-- **2 657 valeurs comparées, 0 hors tolérance.**
+- **2 993 valeurs comparées, 0 hors tolérance.**
 - Les deux cas de mécanisme sont détectés par les deux codes.
-- Un cas est non comparable (16, Timoshenko) ; voir le §5.
-- Les 41 tests unitaires, analytiques et d'intégration réussissent (`fem3d_tests` : 41 déclarés à la révision
-  `75700d2`, 41 / 41 réussis à l'exécution du 19/10/2026).
+- Trois cas sont non comparables (16, 21 et 22 en Timoshenko) ; voir le §5.
+- Les 49 tests unitaires, analytiques et d'intégration réussissent (`fem3d_tests`, 49 / 49 à l'exécution du
+  29/10/2026, branche `feature/charges-sur-barre`).
+- Régénération du 29/10/2026 : les valeurs des cas 01 à 20 diffèrent de la version précédente d'au plus 1,3e-12 en
+  relatif côté OpenSees (autre build de la même version 3.8.0) et 2,8e-13 côté Fem3D (ordre des sommes du calcul par
+  morceaux) ; tous les statuts sont inchangés.
 
 Cette validation porte sur la **statique linéaire de poutres prismatiques élastiques**. Elle ne vaut pas pour
 d'autres domaines (non-linéarité, dynamique, gauchissement), qui ne sont pas implémentés.
@@ -173,5 +177,7 @@ nature dans le cas : translations, rotations, forces ou moments.
 - **Domaine du moteur** : statique linéaire et sections constantes, avec une torsion uniforme. Il gère les rotules
   My et Mz et les appuis élastiques nodaux (ressorts découplés en repère global), mais pas encore les relâchements de
   N, V ou T, les rotules semi-rigides (ressort de rotation en extrémité de barre), les ressorts couplés ou en repère
-  incliné, les excentrements, les charges partielles ni les couples répartis.
+  incliné, les excentrements ni les couples concentrés sur barre. Les charges partielles, ponctuelles et les moments
+  répartis (0.3.0) ne sont comparés à OpenSees qu'en Euler–Bernoulli (forces ponctuelles, charges uniformes
+  partielles) : `ElasticTimoshenkoBeam3d` ignore ces charges, et aucune commande OpenSees n'applique un moment réparti.
 - **Une seule version de référence** : OpenSees 3.8.0.
